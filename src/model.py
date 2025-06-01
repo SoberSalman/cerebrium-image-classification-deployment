@@ -143,8 +143,20 @@ class ImagePreprocessor:
             Preprocessed image ready for model inference
         """
         try:
-            # Load image
-            image = self.load_image(image_path)
+            # Load image as PIL Image for consistency with original model
+            if isinstance(image_path, (str, Path)):
+                from PIL import Image
+                pil_image = Image.open(image_path)
+            else:
+                from PIL import Image
+                pil_image = Image.open(image_path)
+                
+            # Convert to RGB if not already
+            if pil_image.mode != 'RGB':
+                pil_image = pil_image.convert('RGB')
+            
+            # Convert to numpy for our preprocessing
+            image = np.array(pil_image)
             
             # Apply preprocessing
             return self.preprocess_numpy(image)
