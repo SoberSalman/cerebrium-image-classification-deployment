@@ -1,6 +1,4 @@
-# Core ML libraries
-# torch>=2.0.0
-# torchvision>=0.15.0
+# Core ML libraries (torch installed separately)
 onnx>=1.14.0
 onnxruntime>=1.15.0
 
@@ -13,9 +11,7 @@ numpy>=1.24.0
 fastapi>=0.100.0
 uvicorn>=0.22.0
 pydantic>=2.0.0
-
-# Cerebrium
-cerebrium>=1.0.0
+python-multipart>=0.0.6
 
 # Testing
 pytest>=7.4.0
@@ -24,11 +20,4 @@ requests>=2.31.0
 
 # Utilities
 python-dotenv>=1.0.0
-logging-config>=1.0.0
 typer>=0.9.0
-
-# Development
-black>=23.0.0
-isort>=5.12.0
-flake8>=6.0.0
-mypy>=1.5.0

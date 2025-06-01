@@ -139,7 +139,7 @@ class ONNXConverter:
             checker.check_model(onnx_model)
             
             # Print model info
-            logger.info(f"ONNX model verification successful")
+            logger.info("ONNX model verification successful")
             logger.info(f"Model inputs: {[input.name for input in onnx_model.graph.input]}")
             logger.info(f"Model outputs: {[output.name for output in onnx_model.graph.output]}")
             
