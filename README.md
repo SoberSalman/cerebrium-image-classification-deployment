@@ -241,8 +241,9 @@ python tests/test_server.py assets/n01667114_mud_turtle.JPEG
 # Test with your own image
 python tests/test_server.py path/to/your/image.jpg
 # Output: <predicted_class_id>
+```
 
-## 2. Comprehensive Testing
+### 2. Comprehensive Testing
 
 ```bash
 # Run all preset tests
