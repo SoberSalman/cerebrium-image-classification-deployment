@@ -65,10 +65,15 @@ def load_model() -> ImageClassificationPipeline:
         Initialized ImageClassificationPipeline
     """
     try:
-        model_path = "/app/models/model.onnx"
+        # Use different paths for local vs container
+        if os.path.exists("/app/models/model.onnx"):
+            model_path = "/app/models/model.onnx"  # Container path
+        elif os.path.exists("models/model.onnx"):
+            model_path = "models/model.onnx"  # Local path
+        else:
+            raise FileNotFoundError("Model file not found in any expected location")
         
-        if not os.path.exists(model_path):
-            raise FileNotFoundError(f"Model file not found: {model_path}")
+        logger.info(f"Loading model from: {model_path}")
         
         # Initialize pipeline with appropriate providers
         providers = ['CPUExecutionProvider']
@@ -312,7 +317,7 @@ if __name__ == "__main__":
     uvicorn.run(
         "app:app",
         host="0.0.0.0",
-        port=8000,
+        port=8001,
         log_level="info",
         reload=False
     )

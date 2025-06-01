@@ -850,35 +850,6 @@ class DetailedTestResult(unittest.TextTestResult):
     def addFailure(self, test, err):
         super().addFailure(test, err)
         self.test_results.append(('FAIL', test._testMethodName, test.__class__.__name__, str(err[1])))
-    
-    def printSummary(self):
-        """Print detailed test summary."""
-        print("\n" + "="*80)
-        print("DETAILED TEST RESULTS SUMMARY")
-        print("="*80)
-        
-        # Count results by category
-        passes = len([r for r in self.test_results if r[0] == 'PASS'])
-        failures = len([r for r in self.test_results if r[0] == 'FAIL'])
-        errors = len([r for r in self.test_results if r[0] == 'ERROR'])
-        total = len(self.test_results)
-        
-        print(f"Total Tests: {total}")
-        print(f"Passed: {passes} ({passes/total*100:.1f}%)")
-        print(f"Failed: {failures} ({failures/total*100:.1f}%)")
-        print(f"Errors: {errors} ({errors/total*100:.1f}%)")
-        
-        # Print failures and errors
-        if failures > 0 or errors > 0:
-            print("\nFAILURES AND ERRORS:")
-            print("-" * 40)
-            for result in self.test_results:
-                if result[0] in ['FAIL', 'ERROR']:
-                    print(f"{result[0]}: {result[2]}.{result[1]}")
-                    if len(result) > 3:
-                        print(f"  {result[3]}")
-        
-        print("="*80)
 
 
 def run_all_tests():
@@ -899,27 +870,16 @@ def run_all_tests():
         TestConcurrencyAndThreadSafety,
         TestIntegrationWithRealFiles,
         TestAPICompatibility,
-        TestRegressionPrevention,
-        TestPerformance
+        TestRegressionPrevention
+        # Removed TestPerformance since it's not defined
     ]
     
     for test_class in test_classes:
         tests = unittest.TestLoader().loadTestsFromTestCase(test_class)
         test_suite.addTests(tests)
     
-    # Create custom test runner
-    class EnhancedTestRunner:
-        def __init__(self, verbosity=2):
-            self.verbosity = verbosity
-        
-        def run(self, test_suite):
-            result = DetailedTestResult(sys.stdout, True, self.verbosity)
-            test_suite.run(result)
-            result.printSummary()
-            return result
-    
-    # Run tests
-    runner = EnhancedTestRunner(verbosity=2)
+    # Run tests with simple runner
+    runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(test_suite)
     
     return result.wasSuccessful()

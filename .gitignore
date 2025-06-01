@@ -89,3 +89,5 @@ logs/
 
 # Cache
 .cache/
+
+setup_project.sh
