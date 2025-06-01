@@ -18,7 +18,7 @@ from onnx import checker
 
 # Add project root to path for imports
 sys.path.append(str(Path(__file__).parent.parent))
-from models.pytorch_model import ImageClassifier
+from models.pytorch_model import Classifier, BasicBlock
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -38,23 +38,19 @@ class ONNXConverter:
         self.input_shape = input_shape
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         
-    def load_pytorch_model(self, model_path: str, weights_path: str) -> nn.Module:
+    def load_pytorch_model(self, weights_path: str) -> nn.Module:
         """
         Load PyTorch model and weights.
         
         Args:
-            model_path: Path to the PyTorch model file
             weights_path: Path to the model weights file
             
         Returns:
             Loaded PyTorch model
         """
         try:
-            # Import the model class
-            sys.path.append(os.path.dirname(model_path))
-            
-            # Initialize model
-            model = ImageClassifier()
+            # Initialize model with correct architecture
+            model = Classifier(BasicBlock, [2, 2, 2, 2])
             
             # Load weights
             if os.path.exists(weights_path):
@@ -208,7 +204,6 @@ def main():
     
     # Paths
     project_root = Path(__file__).parent.parent
-    model_path = project_root / "models" / "pytorch_model.py"
     weights_path = project_root / "models" / "pytorch_model_weights.pth"
     output_path = project_root / "models" / "model.onnx"
     
@@ -218,7 +213,7 @@ def main():
     try:
         # Load PyTorch model
         logger.info("Loading PyTorch model...")
-        pytorch_model = converter.load_pytorch_model(str(model_path), str(weights_path))
+        pytorch_model = converter.load_pytorch_model(str(weights_path))
         
         # Convert to ONNX
         logger.info("Converting to ONNX...")
